@@ -1,7 +1,7 @@
 import java.net.*;
+import java.util.Scanner;
 
 public class ClientSide {
-    public static final int PORT = 8888;
 
     public ClientSidePacketCatcher[] catchers;
 
@@ -10,36 +10,44 @@ public class ClientSide {
     }
 
     public void runClient() {
-        //TODO receive pc name
-        //TODO convert to IP address
         ClientSidePacketCatcher catcher = null;
         try {
-            InetAddress ipAddress = InetAddress.getByName("localhost");
-            DatagramSocket socket = new DatagramSocket(PORT, ipAddress);
+            InetAddress ipAddress = InetAddress.getByName(getServerHostName());
+            System.out.println("address is: " + ipAddress.getHostAddress());
+            DatagramSocket socket = new DatagramSocket();
             socket.setSoTimeout(10000);
-            new ClientSendMessage(socket).start();//send messages to server
-
+            ClientSendMessages sender = new ClientSendMessages(socket, ipAddress);//send messages to server
+            sender.start();
             catcher = new ClientSidePacketCatcher(socket);
-
+            catcher.start();
             catcher.join();
             System.out.println("finished");
 
         } catch (SocketException e) {
-            e.printStackTrace();
+            System.out.println("Something happened to the connection... bummer");
         } catch (UnknownHostException e) {
+            System.out.println("Cant connect to host, maybe you typed the name wrong?");
         } catch (InterruptedException e) {
         }
-        System.out.println("result:");
+        System.out.println("Result:");
         if (catcher != null) {
             boolean res[] = catcher.getResultArray();
             for (int i = 0; i < res.length; i++) {
-                if (res[i]) System.out.println("packet " + i + " caught");
-                else System.out.println("packet " + i + " lost");
+                if (res[i]) System.out.println("packet " + (i + 1) + " caught");
+                else System.out.println("packet " + (i + 1) + " lost");
 
             }
+            System.out.println("What a wonderful course, Bye Bye now");
 
-        } else System.out.println("all have failed to be received");
+        } else System.out.println("No packets sent, so none received");
 
     }
 
+    private String getServerHostName() {
+        String input;
+        System.out.println("please enter server pc name");
+        Scanner scanner = new Scanner(System.in);
+        input = scanner.nextLine().trim();
+        return input;
+    }
 }

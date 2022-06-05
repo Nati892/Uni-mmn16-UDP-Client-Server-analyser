@@ -20,21 +20,19 @@ public class ClientSidePacketCatcher extends Thread {
         DatagramPacket packet = null;
         super.run();
         try {
-            while (true) {
+            System.out.println("Waiting for responses");
+            while (true && !isArrayFull()) {
                 byte[] received = new byte[1024];
                 packet = new DatagramPacket(received, received.length);
                 socket.receive(packet);
                 String msg = new String(packet.getData()).substring(0, packet.getLength());
                 System.out.println("just received packet: " + msg);
-                if (msg != null) {
-                    int a = new Integer(msg);
-                    if (a >= 0 && a < 10)
-                        rec_arr[a] = true;
-                }
+                fillArray(msg);
             }
         } catch (SocketException e) {
         } catch (IOException e) {
         } finally {
+            socket.close();
         }
     }
 
@@ -42,4 +40,19 @@ public class ClientSidePacketCatcher extends Thread {
         return this.rec_arr;
     }
 
+    private boolean isArrayFull() {
+        boolean res = true;
+        for (boolean b : rec_arr
+        ) {
+            if (!b) res = false;
+        }
+        return res;
+    }
+    private void fillArray(String msg){
+        if (msg != null) {
+            int a = new Integer(msg);
+            if (a >= 1 && a < 11)
+                rec_arr[a - 1] = true;
+        }
+    }
 }
