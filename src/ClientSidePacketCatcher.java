@@ -4,13 +4,13 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 
 public class ClientSidePacketCatcher extends Thread {
-    private boolean rec_arr[];
+    private boolean rec_arr[];//results array
     private DatagramSocket socket;
 
     public ClientSidePacketCatcher(DatagramSocket socket) {
         this.socket = socket;
         rec_arr = new boolean[10];
-        for (int i = 0; i < rec_arr.length; i++) {
+        for (int i = 0; i < rec_arr.length; i++) {//initialize array with false values
             rec_arr[i] = false;
         }
     }
@@ -36,6 +36,11 @@ public class ClientSidePacketCatcher extends Thread {
         }
     }
 
+    /**
+     * returnes the array holding the test results
+     *
+     * @return boolean array of results
+     */
     public boolean[] getResultArray() {
         return this.rec_arr;
     }
@@ -48,7 +53,9 @@ public class ClientSidePacketCatcher extends Thread {
         }
         return res;
     }
-    private void fillArray(String msg){
+
+
+    private void fillArray(String msg) {
         if (msg != null) {
             int a = new Integer(msg);
             if (a >= 1 && a < 11)

@@ -14,15 +14,16 @@ public class SendUdpPacket extends Thread {
         this.msg=msg;
     }
 
+
     @Override
     public void run() {
         super.run();
         try {
-            InetAddress address = packet.getAddress();
+            InetAddress address = packet.getAddress();//get source address and make it target
             packet = new DatagramPacket(msg.getBytes(), msg.getBytes().length, address, packet.getPort());
             clientSocket.send(packet);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("failed to send packet for some reason");
         }
     }
 }

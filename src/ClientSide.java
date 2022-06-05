@@ -13,14 +13,13 @@ public class ClientSide {
         ClientSidePacketCatcher catcher = null;
         try {
             InetAddress ipAddress = InetAddress.getByName(getServerHostName());
-            System.out.println("address is: " + ipAddress.getHostAddress());
             DatagramSocket socket = new DatagramSocket();
             socket.setSoTimeout(10000);
             ClientSendMessages sender = new ClientSendMessages(socket, ipAddress);//send messages to server
             sender.start();
             catcher = new ClientSidePacketCatcher(socket);
-            catcher.start();
-            catcher.join();
+            catcher.start();//listen for responses
+            catcher.join();//wait for catcher to complete
             System.out.println("finished");
 
         } catch (SocketException e) {
@@ -29,7 +28,7 @@ public class ClientSide {
             System.out.println("Cant connect to host, maybe you typed the name wrong?");
         } catch (InterruptedException e) {
         }
-        System.out.println("Result:");
+        System.out.println("Result:");//print results!
         if (catcher != null) {
             boolean res[] = catcher.getResultArray();
             for (int i = 0; i < res.length; i++) {
@@ -45,7 +44,7 @@ public class ClientSide {
 
     private String getServerHostName() {
         String input;
-        System.out.println("please enter server pc name");
+        System.out.println("please enter server pc name, just press enter for \'localhost\'");
         Scanner scanner = new Scanner(System.in);
         input = scanner.nextLine().trim();
         return input;
