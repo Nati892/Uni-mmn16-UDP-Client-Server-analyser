@@ -5,7 +5,7 @@ import java.net.SocketException;
 
 public class UdpServer{
 
-    private static int PORT=8888;
+    private static final int PORT=8888;
 
     public void runServer(){
         DatagramSocket socket= null;
@@ -32,7 +32,7 @@ public class UdpServer{
         }
         String msg = new String(packet.getData()).substring(0, packet.getLength());
         System.out.println(msg);
-        new SendUdpPacket(clientSocket,msg,packet);
+        new SendUdpPacket(clientSocket,msg,packet).start();
     }
 
 }
