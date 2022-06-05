@@ -31,7 +31,7 @@ public class UdpServer{
             e.printStackTrace();
         }
         String msg = new String(packet.getData()).substring(0, packet.getLength());
-        System.out.println(msg);
+        System.out.println(msg+" ip: "+ packet.getAddress().getHostAddress()+ "port: "+ packet.getPort());
         new SendUdpPacket(clientSocket,msg,packet).start();
     }
 
