@@ -4,7 +4,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 
 public class SendUdpPacket extends Thread {
-
+    private static final int PORT=8888;
     private DatagramSocket clientSocket;
     private String msg;
     private DatagramPacket packet;
@@ -17,10 +17,11 @@ public class SendUdpPacket extends Thread {
 
     @Override
     public void run() {
+        super.run();
         try {
-            int clientPort = packet.getPort();
             InetAddress address = packet.getAddress();
-            packet = new DatagramPacket(msg.getBytes(), msg.getBytes().length, address, clientPort);
+            packet = new DatagramPacket(msg.getBytes(), msg.getBytes().length, address, PORT);
+            System.out.println("about to send to: " + address+ ", on port: "+ PORT);//TODO delete
             clientSocket.send(packet);
         } catch (IOException e) {
             e.printStackTrace();
