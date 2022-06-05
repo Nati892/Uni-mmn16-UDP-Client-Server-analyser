@@ -20,7 +20,7 @@ public class SendUdpPacket extends Thread {
         super.run();
         try {
             InetAddress address = packet.getAddress();
-            packet = new DatagramPacket(msg.getBytes(), msg.getBytes().length, address, PORT);
+            packet = new DatagramPacket(msg.getBytes(), msg.getBytes().length, address, packet.getPort());
             System.out.println("about to send to: " + address+ ", on port: "+ packet.getPort());//TODO delete
             clientSocket.send(packet);
         } catch (IOException e) {
